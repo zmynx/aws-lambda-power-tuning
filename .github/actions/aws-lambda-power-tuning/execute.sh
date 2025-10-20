@@ -1,7 +1,7 @@
 #!/bin/bash
 # config
 
-set -euox pipefail
+set -euo pipefail
 
 if [[ $# -gt 1 ]]
 then
@@ -12,25 +12,11 @@ fi
 STACK_NAME=powerTuning
 INPUT=$(cat "${1:-sample-execution-input.json}")  # or use a static string
 
-PROFILE="zMynx"
-REGION="us-east-1"
-
 # retrieve state machine ARN
-STATE_MACHINE_ARN=$(aws stepfunctions list-state-machines \
-    --query "stateMachines[?contains(name,\`${STACK_NAME}\`)]|[0].stateMachineArn" \
-    --output text \
-    --profile $PROFILE \
-    --region $REGION \
-    | cat)
+STATE_MACHINE_ARN=$(aws stepfunctions list-state-machines --query "stateMachines[?contains(name,\`${STACK_NAME}\`)]|[0].stateMachineArn" --output text | cat)
 
 # start execution
-EXECUTION_ARN=$(aws stepfunctions start-execution \
-    --state-machine-arn $STATE_MACHINE_ARN \
-    --input "$INPUT" \
-    --query 'executionArn' \
-    --output text\
-    --profile $PROFILE \
-    --region $REGION)
+EXECUTION_ARN=$(aws stepfunctions start-execution --state-machine-arn $STATE_MACHINE_ARN --input "$INPUT"  --query 'executionArn' --output text)
 
 echo -n "Execution started..."
 
@@ -38,12 +24,7 @@ echo -n "Execution started..."
 while true;
 do
     # retrieve execution status
-    STATUS=$(aws stepfunctions describe-execution \
-        --execution-arn $EXECUTION_ARN \
-        --query 'status' \
-        --output text \
-        --profile $PROFILE \
-        --region $REGION)
+    STATUS=$(aws stepfunctions describe-execution --execution-arn $EXECUTION_ARN --query 'status' --output text)
 
     if test "$STATUS" == "RUNNING"; then
         # keep looping and wait if still running
@@ -58,13 +39,7 @@ do
         echo $STATUS
         echo "Execution output: "
         # retrieve output
-        aws stepfunctions describe-execution \
-            --execution-arn $EXECUTION_ARN \
-            --query 'output' \
-            --output text \
-            --profile $PROFILE \
-            --region $REGION \
-            | cat
+        aws stepfunctions describe-execution --execution-arn $EXECUTION_ARN --query 'output' --output text | jq
         break
     fi
 done

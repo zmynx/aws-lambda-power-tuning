@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-PROFILE="aws-saas-platform-ai-dev"
+PROFILE="zMynx"
 REGION="us-east-1"
 
 zip function.zip lambda_function.py
@@ -20,7 +20,7 @@ aws iam attach-role-policy \
 aws lambda create-function \
     --function-name FibonacciBenchmark \
     --runtime python3.13 \
-    --role arn:aws:iam::183576513728:role/lambda-basic-execution \
+    --role arn:aws:iam::1234567890:role/lambda-basic-execution \
     --handler lambda_function.lambda_handler \
     --zip-file fileb://function.zip \
     --timeout 120 \
