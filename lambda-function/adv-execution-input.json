@@ -1,0 +1,25 @@
+{
+    "lambdaARN": "arn:aws:lambda:us-east-1:12345678910:function:FibonacciBenchmark",
+    "num": 50,
+    "powerValues": [128, 256, 512, 1024, 2048, 3008, 4096, 5120, 6144, 7168, 8192],
+    "payload": [
+        { "payload": { "number": 10 }, "weight": 30 },
+        { "payload": { "number": 20 }, "weight": 15 },
+        { "payload": { "number": 30 }, "weight": 5 }
+    ],
+    "payloadS3": "",
+    "parallelInvocation": true,
+    "strategy": "cost",
+    "balancedWeight": 1.0,
+    "autoOptimize": true,
+    "autoOptimizeAlias": "poc",
+    "dryRun": false,
+    "preProcessorARN": "",
+    "postProcessorARN": "",
+    "discardTopBottom": 0.2,
+    "sleepBetweenRunsMs": 0,
+    "disablePayloadLogs": false,
+    "includeOutputResults": true,
+    "onlyColdStarts": false,
+    "allowedExceptions": []
+}
